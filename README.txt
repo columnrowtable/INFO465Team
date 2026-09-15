@@ -7,6 +7,8 @@ This project is a reuse of one of my own HTML projects, specifically a social me
 
 I allow all team members to utilize this content for the next few assignments if needed. 
 
+Ann-Marie - I've looked over the project and verified it's functionality 
+
 Summary--------------------------------------------
 
 Home: Gives quick access to portal links and tools. 
@@ -27,3 +29,5 @@ This dashboard utilizes CSS FlexBox and Grid to allow for dynamic resizing of co
 Decisions+Challenges -------------------------------
 
 I had to redo my flex grid because content was overlapping or wasn't justifying properly. I also used a couple of templates online to polish the look and feel of the site. Keeping the layout simple also makes it modular, so future changes can be easily implemented. 
+
+
