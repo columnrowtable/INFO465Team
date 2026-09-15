@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Registration System</title>
+
+    <!-- CSS Templates and Styling  -->
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;       
+            --primary-hover: #1e40af;
+            --primary-light: #eff6ff;
+            --accent: #2563eb;       
+            --text-main: #1e293b;     
+            --text-muted: #64748b;   
+            --bg-body: #f8fafc;       
+            --bg-card: #ffffff;
+            --border: #e2e8f0;        
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --radius: 8px;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: 0.5rem 0.85rem;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .nav-link.active {
+            background-color: #ffffff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .screen-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .screen-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .screen-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.55rem 1.1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+
+        .btn-primary { background-color: var(--accent); color: white; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-danger:hover { background-color: #b91c1c; }
+        .btn-disabled { background-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input, select {
+            padding: 0.55rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            background-color: white;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-blue { background-color: #dbeafe; color: #1e40af; }
+        .badge-green { background-color: #dcfce7; color: #166534; }
+        .badge-red { background-color: #fee2e2; color: #991b1b; }
+        .badge-yellow { background-color: #fef3c7; color: #92400e; }
+
+        .alert {
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-success { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .alert-error { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="#" onclick="showScreen('home')" class="logo">
+                 Class Enrollment
+            </a>
+            <nav id="navbar">
+                <a href="#" onclick="showScreen('home')" class="nav-link active" id="nav-home">Home</a>
+                <a href="#" onclick="showScreen('courses')" class="nav-link" id="nav-courses">Course Search</a>
+                <a href="#" onclick="showScreen('registration')" class="nav-link" id="nav-registration">Student Registration</a>
+                <a href="#" onclick="showScreen('instructor')" class="nav-link" id="nav-instructor">Instructor Schedule</a>
+                <a href="#" onclick="showScreen('roster')" class="nav-link" id="nav-roster">Session Enrollment</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div id="globalAlert" class="alert"></div>
+
+        <!-- Main Dashboard -->
+
+
+
+
+        <section id="screen-home" class="screen active">
+            <div class="screen-header">
+                <h1 class="screen-title">Academic & Course Portal</h1>
+                <p class="screen-subtitle">Welcome to the university registration and session management dashboard.</p>
+            </div>
+
+            <div class="card" style="background-color: var(--primary-light); border-color: #bfdbfe;">
+                <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem;">Fall Term Course Registration Active</h2>
+                <p style="font-size: 0.9rem; color: var(--text-main);">Use the quick links below or top navigation bar to explore course listings, register students, and more.</p>
+            </div>
+
+            <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">Core Navigation Modules</h2>
+            <div class="grid grid-2">
+                
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: var(--primary); margin-bottom: 0.5rem;">🔍 Course Search</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Browse course offerings by department, instructor, or course code.</p>
+                    </div>
+                    <div>
+                        <button onclick="showScreen('courses')" class="btn btn-primary">Go to Course Search &rarr;</button>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: var(--primary); margin-bottom: 0.5rem;">📝 Student Registration</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Log in as a student to review, add, or drop courses.</p>
+                    </div>
+                    <div>
+                        <button onclick="showScreen('registration')" class="btn btn-primary">Go to Registration &rarr;</button>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: var(--primary); margin-bottom: 0.5rem;">📅 Instructor Schedule</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Faculty view to check assigned teaching sessions, classroom assignments, schedules, and total students enrolled.</p>
+                    </div>
+                    <div>
+                        <button onclick="showScreen('instructor')" class="btn btn-primary">View Instructor Timetable &rarr;</button>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: var(--primary); margin-bottom: 0.5rem;">👥 Session Enrollment </h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Tool to view the complete list of registered students for any specific course session.</p>
+                    </div>
+                    <div>
+                        <button onclick="showScreen('roster')" class="btn btn-primary">View Class Members &rarr;</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Search   -->
+        
+        <section id="screen-courses" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">Course Search & Catalog</h1>
+                <p class="screen-subtitle">Filter course offerings by department, instructor, or course code.</p>
+            </div>
+
+            <div class="card">
+                <div class="grid grid-3">
+                    <div class="form-group">
+                        <label for="searchQuery">Search Code or Title</label>
+                        <input type="text" id="searchQuery" oninput="renderCourseSearch()" placeholder="e.g. CS 101 or Calculus">
+                    </div>
+                    <div class="form-group">
+                        <label for="searchDept">Department</label>
+                        <select id="searchDept" onchange="renderCourseSearch()">
+                            <option value="ALL">All Departments</option>
+                            <option value="CS">Computer Science (CS)</option>
+                            <option value="MATH">Mathematics (MATH)</option>
+                            <option value="ENG">Engineering (ENG)</option>
+                            <option value="PHYS">Physics (PHYS)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchInstructor">Instructor</label>
+                        <select id="searchInstructor" onchange="renderCourseSearch()">
+                            <option value="ALL">All Instructors</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Title</th>
+                            <th>Dept</th>
+                            <th>Credits</th>
+                            <th>Prerequisites</th>
+                            <th>Modality</th>
+                            <th>Instructor</th>
+                            <th>Capacity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courseTableBody">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Registration -->
+        <section id="screen-registration" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">Student Registration</h1>
+                <p class="screen-subtitle">Manage enrolled sessions and register for upcoming classes.</p>
+            </div>
+
+            <div class="card" style="background-color: var(--primary-light);">
+                <div class="form-group" style="max-width: 400px;">
+                    <label for="studentSelect">Select Student Profile (Login):</label>
+                    <select id="studentSelect" onchange="onStudentChange()">
+                        
+                    </select>
+                </div>
+            </div>
+
+            <!-- Enrollment -->
+            <div class="card">
+                <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 1rem;">Currently Enrolled Sessions</h2>
+                <div id="enrolledCoursesList" class="table-responsive">
+                    
+                </div>
+            </div>
+
+            <!-- Available Courses  -->
+            <div class="card">
+                <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 1rem;">Available Courses for Add/Drop</h2>
+                <div id="availableCoursesList" class="table-responsive">
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedule Screen -->
+
+
+
+        <section id="screen-instructor" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">Instructor Schedule</h1>
+                <p class="screen-subtitle">View assigned teaching sessions and class details.</p>
+            </div>
+
+            <div class="card" style="background-color: var(--primary-light);">
+                <div class="form-group" style="max-width: 400px;">
+                    <label for="instructorSelect">Select Instructor Profile (Login):</label>
+                    <select id="instructorSelect" onchange="renderInstructorSchedule()">
+                        
+                    </select>
+                </div>
+            </div>
+
+            <div id="instructorCourseList" class="grid grid-2">
+                
+            </div>
+        </section>
+
+
+        <!-- Session Enrollment -->
+
+
+
+        <section id="screen-roster" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">Session Enrollment</h1>
+                <p class="screen-subtitle">View registered students</p>
+            </div>
+
+            <div class="card">
+                <div class="form-group" style="max-width: 400px;">
+                    <label for="rosterCourseSelect">Select Course Session:</label>
+                    <select id="rosterCourseSelect" onchange="renderRosterView()">
+                        
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <h2 id="rosterCourseTitle" style="font-size: 1.1rem; color: var(--primary);">Select a Course</h2>
+                        <p id="rosterCourseSubtitle" style="font-size: 0.85rem; color: var(--text-muted);">Session enrollment list</p>
+                    </div>
+                    <div id="rosterCapacityBadge"></div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Major</th>
+                                <th>Academic Year</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTableBody">
+                    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Course Registration 
+    </footer>
+
+    <script>
+
+
+        // Data Store
+
+        const state = {
+            activeStudentId: 'S101',
+            activeInstructorId: 'INS01',
+            
+            students: [
+                { id: 'S101', name: 'Jane Doe', major: 'Computer Science', year: 'Junior' },
+                { id: 'S102', name: 'John Appleseed', major: 'Mathematics', year: 'Senior' },
+                { id: 'S103', name: 'What Man', major: 'Software Engineering', year: 'Sophomore' },
+                { id: 'S104', name: 'Who Woman', major: 'Physics', year: 'Freshman' }
+            ],
+
+            instructors: [
+                { id: 'INS01', name: 'Dr. Alan Turing', dept: 'CS' },
+                { id: 'INS02', name: 'Dr. Nicole Kidman', dept: 'CS' },
+                { id: 'INS03', name: 'Dr. Anne Hathaway', dept: 'MATH' },
+                { id: 'INS04', name: 'Dr. James Wittman', dept: 'PHYS' }
+            ],
+
+            courses: [
+                {
+                    id: 'CS101',
+                    code: 'CS 101',
+                    title: 'Intro to Computer Science',
+                    dept: 'CS',
+                    credits: 3,
+                    prereqs: 'None',
+                    modality: 'In-Person',
+                    instructorId: 'INS01',
+                    room: 'Turing Hall 101',
+                    schedule: 'Mon / Wed 09:00 AM - 10:30 AM',
+                    maxEnrollment: 3,
+                    enrolledStudents: ['S101', 'S102', 'S103'] // FULL
+                },
+                {
+                    id: 'CS302',
+                    code: 'CS 302',
+                    title: 'Data Structures & Algorithms',
+                    dept: 'CS',
+                    credits: 4,
+                    prereqs: 'CS 101',
+                    modality: 'In-Person',
+                    instructorId: 'INS02',
+                    room: 'Science Lab B',
+                    schedule: 'Tue / Thu 11:00 AM - 12:30 PM',
+                    maxEnrollment: 4,
+                    enrolledStudents: ['S101']
+                },
+                {
+                    id: 'MATH201',
+                    code: 'MATH 201',
+                    title: 'Multivariable Calculus',
+                    dept: 'MATH',
+                    credits: 4,
+                    prereqs: 'MATH 101',
+                    modality: 'Hybrid',
+                    instructorId: 'INS03',
+                    room: 'Math Hall 202',
+                    schedule: 'Mon / Wed / Fri 10:00 AM - 11:00 AM',
+                    maxEnrollment: 5,
+                    enrolledStudents: ['S102']
+                },
+                {
+                    id: 'PHYS105',
+                    code: 'PHYS 105',
+                    title: 'General Physics I',
+                    dept: 'PHYS',
+                    credits: 4,
+                    prereqs: 'MATH 101',
+                    modality: 'Online',
+                    instructorId: 'INS04',
+                    room: 'Online Portal',
+                    schedule: 'Asynchronous',
+                    maxEnrollment: 3,
+                    enrolledStudents: ['S104']
+                }
+            ]
+        };
+
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+
+            // Show target screen
+            const targetScreen = document.getElementById(`screen-${screenId}`);
+            if (targetScreen) targetScreen.classList.add('active');
+
+            // Highlight nav link
+            const targetNav = document.getElementById(`nav-${screenId}`);
+            if (targetNav) targetNav.classList.add('active');
+
+            // Re-render
+            refreshViews();
+        }
+
+        function showAlert(msg, type = 'success') {
+            const alertBox = document.getElementById('globalAlert');
+            alertBox.className = `alert alert-${type}`;
+            alertBox.innerText = msg;
+            alertBox.style.display = 'block';
+
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3500);
+        }
+
+        function getInstructorName(id) {
+            const inst = state.instructors.find(i => i.id === id);
+            return inst ? inst.name : 'Unassigned';
+        }
+
+        function getStudent(id) {
+            return state.students.find(s => s.id === id);
+        }
+
+        function refreshViews() {
+            renderCourseSearch();
+            renderStudentRegistration();
+            renderInstructorSchedule();
+            renderRosterView();
+        }
+
+       //Search 
+        function renderCourseSearch() {
+            const query = (document.getElementById('searchQuery').value || '').toLowerCase();
+            const dept = document.getElementById('searchDept').value;
+            const instId = document.getElementById('searchInstructor').value;
+
+            // Populate instructor dropdown filter if empty
+            const instSelect = document.getElementById('searchInstructor');
+            if (instSelect.options.length === 1) {
+                state.instructors.forEach(ins => {
+                    const opt = document.createElement('option');
+                    opt.value = ins.id;
+                    opt.innerText = ins.name;
+                    instSelect.appendChild(opt);
+                });
+            }
+
+            const tbody = document.getElementById('courseTableBody');
+            tbody.innerHTML = '';
+
+            const filtered = state.courses.filter(c => {
+                const matchesQuery = c.code.toLowerCase().includes(query) || c.title.toLowerCase().includes(query);
+                const matchesDept = dept === 'ALL' || c.dept === dept;
+                const matchesInst = instId === 'ALL' || c.instructorId === instId;
+                return matchesQuery && matchesDept && matchesInst;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: var(--text-muted);">No matching courses found.</td></tr>';
+                return;
+            }
+
+            filtered.forEach(c => {
+                const tr = document.createElement('tr');
+                const isFull = c.enrolledStudents.length >= c.maxEnrollment;
+                tr.innerHTML = `
+                    <td><strong>${c.code}</strong></td>
+                    <td>${c.title}</td>
+                    <td><span class="badge badge-blue">${c.dept}</span></td>
+                    <td>${c.credits} Hrs</td>
+                    <td>${c.prereqs}</td>
+                    <td>${c.modality}</td>
+                    <td>${getInstructorName(c.instructorId)}</td>
+                    <td>
+                        <span class="badge ${isFull ? 'badge-red' : 'badge-green'}">
+                            ${c.enrolledStudents.length} / ${c.maxEnrollment} ${isFull ? '(FULL)' : ''}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function onStudentChange() {
+            state.activeStudentId = document.getElementById('studentSelect').value;
+            renderStudentRegistration();
+        }
+
+        // Registration
+        function renderStudentRegistration() {
+            const studentSelect = document.getElementById('studentSelect');
+            if (studentSelect.options.length === 0) {
+                state.students.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.innerText = `${s.name} (${s.id}) - ${s.major}`;
+                    if (s.id === state.activeStudentId) opt.selected = true;
+                    studentSelect.appendChild(opt);
+                });
+            }
+
+            const activeId = state.activeStudentId;
+
+            //Enrollment
+            const enrolledContainer = document.getElementById('enrolledCoursesList');
+            const enrolled = state.courses.filter(c => c.enrolledStudents.includes(activeId));
+
+            if (enrolled.length === 0) {
+                enrolledContainer.innerHTML = '<p style="padding: 1rem; color: var(--text-muted);">No enrolled sessions for this student.</p>';
+            } else {
+                let html = '<table><thead><tr><th>Course Code</th><th>Title</th><th>Schedule & Room</th><th>Credits</th><th>Action</th></tr></thead><tbody>';
+                enrolled.forEach(c => {
+                    html += `
+                        <tr>
+                            <td><strong>${c.code}</strong></td>
+                            <td>${c.title}</td>
+                            <td>${c.schedule} (${c.room})</td>
+                            <td>${c.credits}</td>
+                            <td>
+                                <button onclick="dropCourse('${c.id}')" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Drop</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                html += '</tbody></table>';
+                enrolledContainer.innerHTML = html;
+            }
+
+            // Course Availability
+            const availableContainer = document.getElementById('availableCoursesList');
+            let availHtml = '<table><thead><tr><th>Course Code</th><th>Title</th><th>Instructor</th><th>Capacity</th><th>Action</th></tr></thead><tbody>';
+
+            state.courses.forEach(c => {
+                const isEnrolled = c.enrolledStudents.includes(activeId);
+                const isFull = c.enrolledStudents.length >= c.maxEnrollment;
+
+                let actionBtn = '';
+                if (isEnrolled) {
+                    actionBtn = '<span class="badge badge-blue">Already Registered</span>';
+                } else if (isFull) {
+                    actionBtn = '<button class="btn btn-disabled" style="padding:0.3rem 0.6rem; font-size:0.8rem;" disabled>Class Full</button>';
+                } else {
+                    actionBtn = `<button onclick="registerCourse('${c.id}')" class="btn btn-primary" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Register</button>`;
+                }
+
+                availHtml += `
+                    <tr>
+                        <td><strong>${c.code}</strong></td>
+                        <td>${c.title}</td>
+                        <td>${getInstructorName(c.instructorId)}</td>
+                        <td>
+                            <span class="badge ${isFull ? 'badge-red' : 'badge-green'}">
+                                ${c.enrolledStudents.length} / ${c.maxEnrollment}
+                            </span>
+                        </td>
+                        <td>${actionBtn}</td>
+                    </tr>
+                `;
+            });
+            availHtml += '</tbody></table>';
+            availableContainer.innerHTML = availHtml;
+        }
+
+        // Registration Validation
+        function registerCourse(courseId) {
+            const course = state.courses.find(c => c.id === courseId);
+            const student = getStudent(state.activeStudentId);
+
+            if (!course) return;
+
+            // Enrollment Limits
+            if (course.enrolledStudents.length >= course.maxEnrollment) {
+                showAlert(`Cannot register: ${course.code} is already at maximum capacity (${course.maxEnrollment}).`, 'error');
+                return;
+            }
+
+            // Duplicates
+            if (course.enrolledStudents.includes(state.activeStudentId)) {
+                showAlert(`Validation Error: Student ${student.name} is already registered in ${course.code}.`, 'error');
+                return;
+            }
+
+        
+            course.enrolledStudents.push(state.activeStudentId);
+            showAlert(`Success: Registered ${student.name} for ${course.code}.`, 'success');
+            refreshViews();
+        }
+
+        function dropCourse(courseId) {
+            const course = state.courses.find(c => c.id === courseId);
+            const student = getStudent(state.activeStudentId);
+
+            if (!course) return;
+
+            course.enrolledStudents = course.enrolledStudents.filter(id => id !== state.activeStudentId);
+            showAlert(`Successfully dropped ${course.code} for ${student.name}.`, 'success');
+            refreshViews();
+        }
+
+        function renderInstructorSchedule() {
+            const select = document.getElementById('instructorSelect');
+            if (select.options.length === 0) {
+                state.instructors.forEach(ins => {
+                    const opt = document.createElement('option');
+                    opt.value = ins.id;
+                    opt.innerText = `${ins.name} (${ins.dept})`;
+                    if (ins.id === state.activeInstructorId) opt.selected = true;
+                    select.appendChild(opt);
+                });
+            }
+
+            state.activeInstructorId = select.value;
+            const assigned = state.courses.filter(c => c.instructorId === state.activeInstructorId);
+            const container = document.getElementById('instructorCourseList');
+            container.innerHTML = '';
+
+            if (assigned.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">No assigned sessions for this instructor.</p>';
+                return;
+            }
+
+            assigned.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
+                        <span class="badge badge-blue">${c.code}</span>
+                        <span class="badge badge-green">${c.modality}</span>
+                    </div>
+                    <h3 style="color: var(--primary); font-size:1.1rem; margin-bottom:0.5rem;">${c.title}</h3>
+                    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.25rem;"><strong>Schedule:</strong> ${c.schedule}</p>
+                    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem;"><strong>Room:</strong> ${c.room}</p>
+                    <div style="border-top:1px solid var(--border); padding-top:0.5rem; display:flex; justify-between; align-items:center;">
+                        <span style="font-size:0.85rem;">Enrolled: <strong>${c.enrolledStudents.length} / ${c.maxEnrollment}</strong></span>
+                        <button onclick="viewRosterForCourse('${c.id}')" class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">View Roster &rarr;</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function viewRosterForCourse(courseId) {
+            document.getElementById('rosterCourseSelect').value = courseId;
+            showScreen('roster');
+        }
+
+        function renderRosterView() {
+            const select = document.getElementById('rosterCourseSelect');
+            if (select.options.length === 0) {
+                state.courses.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = `${c.code} - ${c.title}`;
+                    select.appendChild(opt);
+                });
+            }
+
+            const selectedCourseId = select.value || state.courses[0].id;
+            const course = state.courses.find(c => c.id === selectedCourseId);
+            const tbody = document.getElementById('rosterTableBody');
+
+            if (!course) return;
+
+            document.getElementById('rosterCourseTitle').innerText = `${course.code}: ${course.title}`;
+            document.getElementById('rosterCourseSubtitle').innerText = `Instructor: ${getInstructorName(course.instructorId)} | Schedule: ${course.schedule} (${course.room})`;
+            
+            document.getElementById('rosterCapacityBadge').innerHTML = `
+                <span class="badge ${course.enrolledStudents.length >= course.maxEnrollment ? 'badge-red' : 'badge-green'}">
+                    Capacity: ${course.enrolledStudents.length} / ${course.maxEnrollment} Enrolled
+                </span>
+            `;
+
+            tbody.innerHTML = '';
+
+            if (course.enrolledStudents.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No students are currently enrolled in this session.</td></tr>';
+                return;
+            }
+
+            course.enrolledStudents.forEach(stId => {
+                const student = getStudent(stId);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${student.id}</strong></td>
+                    <td>${student.name}</td>
+                    <td>${student.major}</td>
+                    <td>${student.year}</td>
+                    <td><span class="badge badge-green">Confirmed</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // start webview
+        window.onload = function() {
+            refreshViews();
+        };
+    </script>
+</body>
+</html>
