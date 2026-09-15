@@ -9,6 +9,8 @@ I allow all team members to utilize this content for the next few assignments if
 
 Ann-Marie - I've looked over the project and verified it's functionality 
 
+Abby Sefekme- I have reviewed code all members now have push access 
+
 Summary--------------------------------------------
 
 Home: Gives quick access to portal links and tools. 
